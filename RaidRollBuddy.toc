@@ -1,6 +1,6 @@
 ## Interface: 11200
 ## Title: RaidRollBuddy
-## Author: Klausdieter
+## Author: Klausdieter,Rayito
 ## Version: 1.0.0
 ## Notes: Make loot rolls obvious and easy - /rrb for Settings
 ## SavedVariables:FrameShownDuration
