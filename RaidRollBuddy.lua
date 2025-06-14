@@ -67,8 +67,8 @@ local function CreateRollButtons(frame)
   local RollOSButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
   buttonProperties(RollOSButton)
   -- Add a SR button
-  local RollSRButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
-  buttonProperties(RollSRButton)
+  local RollTMOGButton = CreateFrame("Button", nil, frame, "UIPanelButtonTemplate")
+  buttonProperties(RollTMOGButton)
 
   -- MS Button
   RollMSButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -8, -6) -- Position at the top right
@@ -84,11 +84,11 @@ local function CreateRollButtons(frame)
     RandomRoll(1, 99)
   end)
 
-  -- SR Button
-  RollSRButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -8, -48) -- Position at the top right
-  RollSRButton:SetText("SR")
-  RollSRButton:SetScript("OnClick", function()
-    RandomRoll(1, 101)
+  -- TMOG Button
+  RollTMOGButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -8, -48) -- Position at the top right
+  RollTMOGButton:SetText("TMOG")
+  RollTMOGButton:SetScript("OnClick", function()
+    RandomRoll(1, 98)
   end)
 end
 
