@@ -36,8 +36,8 @@ end
 local function CreateCloseButton(frame)
   -- Add a close button
   local closeButton = CreateFrame("Button", nil, frame, "UIPanelCloseButton")
-  closeButton:SetWidth(25) -- Button size
-  closeButton:SetHeight(25) -- Button size
+  closeButton:SetWidth(25)                                 -- Button size
+  closeButton:SetHeight(25)                                -- Button size
   closeButton:SetPoint("TOPLEFT", frame, "TOPLEFT", 2, -2) -- Position at the top right
 
   -- Set textures if you want to customize the appearance
@@ -47,12 +47,12 @@ local function CreateCloseButton(frame)
 
   -- Hide the frame when the button is clicked
   closeButton:SetScript("OnClick", function()
-      frame:Hide()
+    frame:Hide()
   end)
 end
 
 local function buttonProperties(button)
-  button:SetWidth(35) -- Button size
+  button:SetWidth(35)  -- Button size
   button:SetHeight(22) -- Button size
   button:SetNormalTexture("Interface\\Buttons\\UI-Panel-Button-Up")
   button:SetHighlightTexture("Interface\\Buttons\\UI-Panel-Button-Highlight")
@@ -76,7 +76,7 @@ local function CreateRollButtons(frame)
   RollMSButton:SetScript("OnClick", function()
     RandomRoll(1, 100)
   end)
-  
+
   -- OS Button
   RollOSButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", -8, -27) -- Position at the top right
   RollOSButton:SetText("OS")
@@ -94,14 +94,16 @@ end
 
 local function CreateMainFrame()
   local frame = CreateFrame("Frame", "ItemRollFrame", UIParent)
-  frame:SetWidth(400) -- Adjust size as needed
+  frame:SetWidth(400)                                -- Adjust size as needed
   frame:SetHeight(frame_height)
   frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0) -- Position at center of the parent frame
   frame:SetBackdrop({
-      bgFile = "Interface/Tooltips/UI-Tooltip-Background",
-      edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
-      tile = true, tileSize = 16, edgeSize = 16,
-      insets = { left = 4, right = 4, top = 4, bottom = 4 }
+    bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+    edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+    tile = true,
+    tileSize = 16,
+    edgeSize = 16,
+    insets = { left = 4, right = 4, top = 4, bottom = 4 }
   })
   frame:SetBackdropColor(0, 0, 0, 1) -- Black background with full opacity
 
@@ -127,13 +129,13 @@ local itemRollFrame = CreateMainFrame()
 local function InitItemInfo(frame)
   -- Create the texture for the item icon
   local icon = frame:CreateTexture()
-  icon:SetWidth(50) -- Size of the icon
+  icon:SetWidth(50)  -- Size of the icon
   icon:SetHeight(50) -- Size of the icon
   icon:SetPoint("TOP", frame, "TOP", 0, -10)
 
   -- Create a button for mouse interaction
   local iconButton = CreateFrame("Button", nil, frame)
-  iconButton:SetWidth(50) -- Size of the icon
+  iconButton:SetWidth(50)  -- Size of the icon
   iconButton:SetHeight(50) -- Size of the icon
   iconButton:SetPoint("TOP", frame, "TOP", 0, -10)
 
@@ -164,11 +166,12 @@ local function InitItemInfo(frame)
     tt:Hide()
   end)
   iconButton:SetScript("OnClick", function()
-    if ( IsControlKeyDown() ) then
+    if (IsControlKeyDown()) then
       DressUpItemLink(frame.itemLink);
-    elseif ( IsShiftKeyDown() and ChatFrameEditBox:IsVisible() ) then
+    elseif (IsShiftKeyDown() and ChatFrameEditBox:IsVisible()) then
       local itemName, itemLink, itemQuality, _, _, _, _, _, itemIcon = GetItemInfo(frame.itemLink)
-      ChatFrameEditBox:Insert(ITEM_QUALITY_COLORS[itemQuality].hex.."\124H"..itemLink.."\124h["..itemName.."]\124h"..FONT_COLOR_CODE_CLOSE);
+      ChatFrameEditBox:Insert(ITEM_QUALITY_COLORS[itemQuality].hex ..
+      "\124H" .. itemLink .. "\124h[" .. itemName .. "]\124h" .. FONT_COLOR_CODE_CLOSE);
     end
   end)
 end
@@ -195,9 +198,9 @@ local function SetItemInfo(frame, itemLinkArg)
   end
 
   frame.icon:SetTexture(itemIcon)
-  frame.iconButton:SetNormalTexture(itemIcon)  -- Sets the same texture as the icon
+  frame.iconButton:SetNormalTexture(itemIcon) -- Sets the same texture as the icon
 
-  frame.name:SetText(GetColoredTextByQuality(itemName,itemQuality))
+  frame.name:SetText(GetColoredTextByQuality(itemName, itemQuality))
 
   frame.itemLink = itemLink
   return true
@@ -206,7 +209,7 @@ end
 local time_elapsed = 0
 local item_query = 0.5
 local times = 5
-local function ShowFrame(frame,duration,item)
+local function ShowFrame(frame, duration, item)
   frame:SetScript("OnUpdate", function()
     time_elapsed = time_elapsed + arg1
     item_query = item_query - arg1
@@ -222,7 +225,7 @@ local function ShowFrame(frame,duration,item)
       times = times - 1
     else
       -- try to set item info, if it's not a valid item or too low quality, hide
-      if not SetItemInfo(itemRollFrame,item) then frame:Hide() end
+      if not SetItemInfo(itemRollFrame, item) then frame:Hide() end
       times = 5
     end
   end)
@@ -282,17 +285,17 @@ local function UpdateMSTextArea(frame)
     -- if maxRoll is the same, sort roll desc.
     return a.roll > b.roll
   end)
-  
+
   local text = ""
   local count = 0
   for i, message in ipairs(rollMessagesMS) do
-      --if count >= 7 then break end
-      text = text .. message.msg .. "\n"
-      count = count + 1
+    --if count >= 7 then break end
+    text = text .. message.msg .. "\n"
+    count = count + 1
   end
   if count >= 3 then
-    myframe:SetHeight(myframe:GetHeight()+12)
-    frame:SetHeight(frame:GetHeight() + 12) 
+    myframe:SetHeight(myframe:GetHeight() + 12)
+    frame:SetHeight(frame:GetHeight() + 12)
   end
   myframe:SetText("MS rolls (1-100)" .. "\n" .. text)
 end
@@ -310,17 +313,17 @@ local function UpdateOSTextArea(frame)
     -- if maxRoll is the same, sort roll desc.
     return a.roll > b.roll
   end)
-  
+
   local text = ""
   local count = 0
   for i, message in ipairs(rollMessagesOS) do
-      --if count >= 7 then break end
-      text = text .. message.msg .. "\n"
-      count = count + 1
+    --if count >= 7 then break end
+    text = text .. message.msg .. "\n"
+    count = count + 1
   end
   if count >= 3 then
-    myframe2:SetHeight(myframe2:GetHeight()+12)
-    frame:SetHeight(frame:GetHeight() + 12) 
+    myframe2:SetHeight(myframe2:GetHeight() + 12)
+    frame:SetHeight(frame:GetHeight() + 12)
   end
   myframe2:SetText("OS rolls (1-99)" .. "\n \n" .. text)
 end
@@ -342,13 +345,13 @@ local function UpdateTMOGTextArea(frame)
   local text = ""
   local count = 0
   for i, message in ipairs(rollMessagesTMOG) do
-      --if count >= 7 then break end
-      text = text .. message.msg .. "\n"
-      count = count + 1
+    --if count >= 7 then break end
+    text = text .. message.msg .. "\n"
+    count = count + 1
   end
   if count >= 3 then
-    myframe3:SetHeight(myframe3:GetHeight()+12)
-    frame:SetHeight(frame:GetHeight() + 12) 
+    myframe3:SetHeight(myframe3:GetHeight() + 12)
+    frame:SetHeight(frame:GetHeight() + 12)
   end
   myframe3:SetText("TMOG rolls (1-98)" .. "\n" .. text)
 end
@@ -366,17 +369,17 @@ end
 -- no good, seems like masterLooterRaidID always nil?
 local function IsUnitMasterLooter(unit)
   local lootMethod, masterLooterPartyID, masterLooterRaidID = GetLootMethod()
-  
+
   if lootMethod == "master" then
-      if IsInRaid() then
-          -- In a raid, use the raid ID to check
-          return UnitIsUnit(unit, "raid" .. masterLooterRaidID)
-      elseif IsInGroup() then
-          -- In a party, use the party ID to check
-          return UnitIsUnit(unit, "party" .. masterLooterPartyID)
-      end
+    if IsInRaid() then
+      -- In a raid, use the raid ID to check
+      return UnitIsUnit(unit, "raid" .. masterLooterRaidID)
+    elseif IsInGroup() then
+      -- In a party, use the party ID to check
+      return UnitIsUnit(unit, "party" .. masterLooterPartyID)
+    end
   end
-  
+
   return false
 end
 
@@ -387,23 +390,23 @@ local function HandleChatMessage(event, message, from)
       -- table.insert(rollMessages, message)
       -- Optionally, update the display immediately
       -- UpdateScrollArea(itemRollFrame)
-      local _,_,roller, roll, minRoll, maxRoll = string.find(message, "(%S+) rolls (%d+) %((%d+)%-(%d+)%)")
+      local _, _, roller, roll, minRoll, maxRoll = string.find(message, "(%S+) rolls (%d+) %((%d+)%-(%d+)%)")
       -- rrb_print(roller .. " " .. roll .. " " .. minRoll .. " " .. maxRoll)
       if roller and roll then
-          roll = tonumber(roll) -- Convert roll to a number
-          maxRoll = tonumber(maxRoll)
-          -- table.insert(rollMessages, { roller = roller, roll = roll, maxRoll = maxRoll, msg = message })
-          time_elapsed = 0
-          if maxRoll == 100 then
-            table.insert(rollMessagesMS, { roller = roller, roll = roll, maxRoll = maxRoll, msg = roller .. "-" .. roll })
-            UpdateMSTextArea(itemRollFrame)
-          elseif maxRoll == 99 then
-            table.insert(rollMessagesOS, { roller = roller, roll = roll, maxRoll = maxRoll, msg = roller .. "-" .. roll })
-            UpdateOSTextArea(itemRollFrame)
-          elseif maxRoll == 98 then
-            table.insert(rollMessagesTMOG, { roller = roller, roll = roll, maxRoll = maxRoll, msg = roller .. "-" .. roll })
-            UpdateTMOGTextArea(itemRollFrame)
-          end
+        roll = tonumber(roll)   -- Convert roll to a number
+        maxRoll = tonumber(maxRoll)
+        -- table.insert(rollMessages, { roller = roller, roll = roll, maxRoll = maxRoll, msg = message })
+        time_elapsed = 0
+        if maxRoll == 100 then
+          table.insert(rollMessagesMS, { roller = roller, roll = roll, maxRoll = maxRoll, msg = roller .. "-" .. roll })
+          UpdateMSTextArea(itemRollFrame)
+        elseif maxRoll == 99 then
+          table.insert(rollMessagesOS, { roller = roller, roll = roll, maxRoll = maxRoll, msg = roller .. "-" .. roll })
+          UpdateOSTextArea(itemRollFrame)
+        elseif maxRoll == 98 then
+          table.insert(rollMessagesTMOG, { roller = roller, roll = roll, maxRoll = maxRoll, msg = roller .. "-" .. roll })
+          UpdateTMOGTextArea(itemRollFrame)
+        end
       end
     end
   elseif event == "CHAT_MSG_RAID_WARNING" then
@@ -412,13 +415,13 @@ local function HandleChatMessage(event, message, from)
       local links = ExtractItemLinksFromMessage(message)
       if tsize(links) == 1 then
         if string.find(message, "^No one has need:") or
-           string.find(message,"has been sent to") or
-           string.find(message, " received ") then
+            string.find(message, "has been sent to") or
+            string.find(message, " received ") then
           itemRollFrame:Hide()
           return
-        elseif string.find(message,"Rolling Cancelled") or -- usually a cancel is accidental in my experience
-               string.find(message,"seconds left to roll") or
-               string.find(message,"Rolling is now Closed") then
+        elseif string.find(message, "Rolling Cancelled") or -- usually a cancel is accidental in my experience
+            string.find(message, "seconds left to roll") or
+            string.find(message, "Rolling is now Closed") then
           return
         end
 
@@ -429,7 +432,7 @@ local function HandleChatMessage(event, message, from)
         UpdateOSTextArea(itemRollFrame)
         UpdateTMOGTextArea(itemRollFrame)
         time_elapsed = 0
-        ShowFrame(itemRollFrame,FrameShownDuration,links[1])
+        ShowFrame(itemRollFrame, FrameShownDuration, links[1])
         -- SetItemInfo(itemRollFrame,links[1])
       end
     end
@@ -441,22 +444,22 @@ end
 itemRollFrame:RegisterEvent("ADDON_LOADED")
 itemRollFrame:RegisterEvent("CHAT_MSG_SYSTEM")
 itemRollFrame:RegisterEvent("CHAT_MSG_RAID_WARNING")
-itemRollFrame:SetScript("OnEvent", function () HandleChatMessage(event,arg1,arg2) end)
+itemRollFrame:SetScript("OnEvent", function() HandleChatMessage(event, arg1, arg2) end)
 
 -- Register the slash command
 SLASH_RAIDROLLBUDDY1 = '/rrb'
 
 -- Command handler
 SlashCmdList["RAIDROLLBUDDY"] = function(msg)
-    local newDuration = tonumber(msg)
-    if newDuration then
-      if newDuration > 0 then
-        FrameShownDuration = newDuration
-        rrb_print("Frame shown duration set to " .. newDuration .. " seconds.")
-      else
-        rrb_print("Invalid duration. Please enter a number greater than 0.")
-      end
+  local newDuration = tonumber(msg)
+  if newDuration then
+    if newDuration > 0 then
+      FrameShownDuration = newDuration
+      rrb_print("Frame shown duration set to " .. newDuration .. " seconds.")
     else
-      ShowFrame(itemRollFrame,FrameShownDuration,"item:15723")
+      rrb_print("Invalid duration. Please enter a number greater than 0.")
     end
+  else
+    ShowFrame(itemRollFrame, FrameShownDuration, "item:15723")
+  end
 end
