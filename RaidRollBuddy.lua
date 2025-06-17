@@ -94,7 +94,7 @@ end
 
 local function CreateMainFrame()
   local frame = CreateFrame("Frame", "ItemRollFrame", UIParent)
-  frame:SetWidth(145) -- Adjust size as needed
+  frame:SetWidth(400) -- Adjust size as needed
   frame:SetHeight(frame_height)
   frame:SetPoint("CENTER", UIParent, "CENTER", 0, 0) -- Position at center of the parent frame
   frame:SetBackdrop({
@@ -233,23 +233,48 @@ local function ShowFrame(frame,duration,item)
   frame:Show()
 end
 
-local function CreateTextArea(frame)
-  local textArea = frame:CreateFontString(nil, "OVERLAY", "GameFontNormal")
+
+local function CreateTextAreaMS(frame)
+  local textArea = frame:CreateFontString("MStext", "OVERLAY", "GameFontNormal")
   textArea:SetHeight(textArea_height) -- Size of the icon
-  textArea:SetPoint("TOP", frame, "TOP", 0, -95)
-  textArea:SetJustifyH("LEFT")
+  textArea:SetPoint("TOP", frame, "TOP", -125, -95)
+  textArea:SetJustifyH("CENTER")
   textArea:SetJustifyV("TOP")
 
   return textArea
 end
 
-local rollMessages = {}
-local function UpdateTextArea(frame)
-  if not frame.textArea then
-    frame.textArea = CreateTextArea(frame)
+local function CreateTextAreaOS(frame)
+  local textArea = frame:CreateFontString("OStext", "OVERLAY", "GameFontNormal")
+  textArea:SetHeight(textArea_height) -- Size of the icon
+  textArea:SetPoint("TOP", frame, "TOP", 0, -95)
+  textArea:SetJustifyH("CENTER")
+  textArea:SetJustifyV("TOP")
+
+  return textArea
+end
+
+local function CreateTextAreaTMOG(frame)
+  local textArea = frame:CreateFontString("TMOGtext", "OVERLAY", "GameFontNormal")
+  textArea:SetHeight(textArea_height) -- Size of the icon
+  textArea:SetPoint("TOP", frame, "TOP", 125, -95)
+  textArea:SetJustifyH("CENTER")
+  textArea:SetJustifyV("TOP")
+
+  return textArea
+end
+
+
+-- local rollMessages = {}
+local rollMessagesMS = {}
+local rollMessagesOS = {}
+local rollMessagesTMOG = {}
+local function UpdateMSTextArea(frame)
+  if not myframe then
+    myframe = CreateTextAreaMS(frame)
   end
   -- Adapt rollMessage sorting
-  table.sort(rollMessages, function(a, b)
+  table.sort(rollMessagesMS, function(a, b)
     -- first sort maxRoll desc.
     if a.maxRoll ~= b.maxRoll then
       return a.maxRoll > b.maxRoll
@@ -258,19 +283,74 @@ local function UpdateTextArea(frame)
     return a.roll > b.roll
   end)
   
-  -- frame.textArea:SetTeClear()  -- Clear the existing messages
   local text = ""
   local count = 0
-  for i, message in ipairs(rollMessages) do
+  for i, message in ipairs(rollMessagesMS) do
       --if count >= 7 then break end
       text = text .. message.msg .. "\n"
       count = count + 1
   end
-  if count >= 4 then
-    frame.textArea:SetHeight(frame.textArea:GetHeight()+12)
+  if count >= 3 then
+    myframe:SetHeight(myframe:GetHeight()+12)
     frame:SetHeight(frame:GetHeight() + 12) 
   end
-  frame.textArea:SetText(text)
+  myframe:SetText("MS rolls (1-100)" .. "\n" .. text)
+end
+
+local function UpdateOSTextArea(frame)
+  if not myframe2 then
+    myframe2 = CreateTextAreaOS(frame)
+  end
+  -- Adapt rollMessage sorting
+  table.sort(rollMessagesOS, function(a, b)
+    -- first sort maxRoll desc.
+    if a.maxRoll ~= b.maxRoll then
+      return a.maxRoll > b.maxRoll
+    end
+    -- if maxRoll is the same, sort roll desc.
+    return a.roll > b.roll
+  end)
+  
+  local text = ""
+  local count = 0
+  for i, message in ipairs(rollMessagesOS) do
+      --if count >= 7 then break end
+      text = text .. message.msg .. "\n"
+      count = count + 1
+  end
+  if count >= 3 then
+    myframe2:SetHeight(myframe2:GetHeight()+12)
+    frame:SetHeight(frame:GetHeight() + 12) 
+  end
+  myframe2:SetText("OS rolls (1-99)" .. "\n \n" .. text)
+end
+
+local function UpdateTMOGTextArea(frame)
+  if not myframe3 then
+    myframe3 = CreateTextAreaTMOG(frame)
+  end
+  -- Adapt rollMessage sorting
+  table.sort(rollMessagesTMOG, function(a, b)
+    -- first sort maxRoll desc.
+    if a.maxRoll ~= b.maxRoll then
+      return a.maxRoll > b.maxRoll
+    end
+    -- if maxRoll is the same, sort roll desc.
+    return a.roll > b.roll
+  end)
+
+  local text = ""
+  local count = 0
+  for i, message in ipairs(rollMessagesTMOG) do
+      --if count >= 7 then break end
+      text = text .. message.msg .. "\n"
+      count = count + 1
+  end
+  if count >= 3 then
+    myframe3:SetHeight(myframe3:GetHeight()+12)
+    frame:SetHeight(frame:GetHeight() + 12) 
+  end
+  myframe3:SetText("TMOG rolls (1-98)" .. "\n" .. text)
 end
 
 local function ExtractItemLinksFromMessage(message)
@@ -312,9 +392,18 @@ local function HandleChatMessage(event, message, from)
       if roller and roll then
           roll = tonumber(roll) -- Convert roll to a number
           maxRoll = tonumber(maxRoll)
-          table.insert(rollMessages, { roller = roller, roll = roll, maxRoll = maxRoll, msg = message })
+          -- table.insert(rollMessages, { roller = roller, roll = roll, maxRoll = maxRoll, msg = message })
           time_elapsed = 0
-          UpdateTextArea(itemRollFrame)
+          if maxRoll == 100 then
+            table.insert(rollMessagesMS, { roller = roller, roll = roll, maxRoll = maxRoll, msg = roller .. "-" .. roll })
+            UpdateMSTextArea(itemRollFrame)
+          elseif maxRoll == 99 then
+            table.insert(rollMessagesOS, { roller = roller, roll = roll, maxRoll = maxRoll, msg = roller .. "-" .. roll })
+            UpdateOSTextArea(itemRollFrame)
+          elseif maxRoll == 98 then
+            table.insert(rollMessagesTMOG, { roller = roller, roll = roll, maxRoll = maxRoll, msg = roller .. "-" .. roll })
+            UpdateTMOGTextArea(itemRollFrame)
+          end
       end
     end
   elseif event == "CHAT_MSG_RAID_WARNING" then
@@ -332,11 +421,15 @@ local function HandleChatMessage(event, message, from)
                string.find(message,"Rolling is now Closed") then
           return
         end
-        rollMessages = {}
-        UpdateTextArea(itemRollFrame)
+
+        rollMessagesMS = {}
+        rollMessagesOS = {}
+        rollMessagesTMOG = {}
+        UpdateMSTextArea(itemRollFrame)
+        UpdateOSTextArea(itemRollFrame)
+        UpdateTMOGTextArea(itemRollFrame)
         time_elapsed = 0
         ShowFrame(itemRollFrame,FrameShownDuration,links[1])
-
         -- SetItemInfo(itemRollFrame,links[1])
       end
     end
